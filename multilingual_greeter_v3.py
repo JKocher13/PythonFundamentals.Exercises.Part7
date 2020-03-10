@@ -1,5 +1,5 @@
 from typing import Dict
-
+import random
 
 # Populate this dictionary with at least two languages.
 # Use integers for keys and strings for values.
@@ -18,9 +18,9 @@ name_prompt_dict = {1: 'What is your name?',
 
 # Populate this dictionary with appropriate prompts that correspond with the ids from lang_dict.
 # Example: Key = 1. Value = 'Hello'.
-greetings_dict = {1:'Hello',
-                  2: 'Hola',
-                  3: 'Olá'
+greetings_dict = {1:['Hello', 'Wassup', 'Yo'],
+                  2: ['Hola', 'Diga', 'Ey'],
+                  3: ['Olá','Oi','Alô!']
 }
 
 
@@ -99,11 +99,97 @@ def greet(name: str, greetings_options: Dict[int, str], lang_choice: int) -> Non
     :param lang_choice: The language the user has chosen.
     :return:
     """
+    y = random.randint(0, 2)
     x = greetings_options.get(lang_choice)
+    x = x[y]
     print(x + " " + name)
 
 
+def user_admin_selection():
+    x = input("1. For admin mode \n2. For user mode\n")
+    return x
+
+def edit_or_add_selection():
+    x = input("1. To add languages\n2. To edit greetings\n")
+    return x
+
+def edit_or_add(edit_admin):
+    if edit_admin == "1":
+        admin_start_language(determine_start_place(lang_dict))
+    if edit_admin == "2":
+        select_lang_change()
+
+def select_lang_change():
+    print(lang_dict)
+    x = input("What language would you like to edit?\n")
+    x = int(x)
+    test_lang(x)
+    change_name_prompt(x)
+
+def test_lang(x):
+    if x in lang_dict == True:
+        return x
+    elif x in lang_dict == False:
+        print("Invalid Option")
+        select_lang_change()
+
+def change_name_prompt(lang_in):
+    x = input("What would you like to change the name prompt to? \nIf you wish to keep the prompt type N\n")
+    if x == "N" or x == "n":
+        add_greeting_prompt(lang_in)
+    else:
+        name_prompt_dict[lang_in]=x
+        add_greeting_prompt(lang_in)
+    user_or_admin(user_admin_selection())
+
+def add_greeting_prompt(lang_in):
+    x = input("What would you like to add to the list of greetings?\n")
+    greetings_dict[lang_in].append(x)
+
+
+
+
+
+def determine_start_place(dict):
+    for x in dict:
+        last = x
+    y = x +1
+    return y
+
+def admin_start_language(key):
+    x = input("What language would you like to add? \n")
+    lang_dict[key] = x
+    admin_start_name_prompt(determine_start_place(name_prompt_dict))
+
+def admin_start_name_prompt(key):
+    x = input("How do you say the phrase: What is your name in that language? \n")
+    name_prompt_dict[key] = x
+    admin_start_greeting(determine_start_place(greetings_dict))
+
+def admin_start_greeting(key):
+    x = input("What greeting would you like to have for the first greeting? \n")
+    y = input("What greeting would you like to have for the second greeting? \n")
+    z = input("What greeting would you like to have for the third greeting? \n")
+    lst = [x,y,z]
+    greetings_dict[key] = lst
+
+def user_or_admin(user_admin_pick):
+    str(user_admin_pick)
+    if user_admin_pick == "1":
+        while user_admin_pick == "1":
+            edit_or_add(edit_or_add_selection())
+
+    elif user_admin_pick == "2":
+        print_language_options(lang_dict)
+    else:
+        print("Invalid selection, Try again.")
+        user_admin_pick()
+
+
+
+
 if __name__ == '__main__':
+    user_or_admin(user_admin_selection())
     print_language_options(lang_dict)
     chosen_lang = language_input()
     while language_choice_is_valid(lang_dict, chosen_lang) is False:

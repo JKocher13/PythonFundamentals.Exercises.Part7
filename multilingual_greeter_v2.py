@@ -103,7 +103,82 @@ def greet(name: str, greetings_options: Dict[int, str], lang_choice: int) -> Non
     print(x + " " + name)
 
 
+def user_admin_selection():
+    x = input("1. For admin mode \n2. For user mode\n")
+    return x
+
+def edit_or_add_selection():
+    x = input("1. To add languages\n2. To edit greetings\n")
+    return x
+
+def edit_or_add(edit_admin):
+    if edit_admin == "1":
+        admin_start_language(determine_start_place(lang_dict))
+    if edit_admin == "2":
+        select_lang_change()
+
+def select_lang_change():
+    print(lang_dict)
+    x = input("What language would you like to edit?\n")
+    x = int(x)
+    test_lang(x)
+    change_name_prompt(x)
+
+def test_lang(x):
+    if x in lang_dict == True:
+        return x
+    elif x in lang_dict == False:
+        print("Invalid Option")
+        select_lang_change()
+
+def change_name_prompt(lang_in):
+    x = input("What would you like to change the name prompt to?\n")
+    name_prompt_dict[lang_in]=x
+    change_greeting_prompt(lang_in)
+
+def change_greeting_prompt(lang_in):
+    x = input("What would you like to change the greeting to?\n")
+    greetings_dict[lang_in] = x
+
+
+def determine_start_place(dict):
+    for x in dict:
+        last = x
+    y = x +1
+    return y
+
+def admin_start_language(key):
+    x = input("What language would you like to add? \n")
+    lang_dict[key] = x
+    admin_start_name_prompt(determine_start_place(name_prompt_dict))
+
+def admin_start_name_prompt(key):
+    x = input("How do you say the phrase: What is your name in that language? \n")
+    name_prompt_dict[key] = x
+    admin_start_greeting(determine_start_place(greetings_dict))
+
+def admin_start_greeting(key):
+    x = input("What greeting would you like to have for that greeting? \n")
+    greetings_dict[key] = x
+
+
+def user_or_admin(user_admin_pick):
+    str(user_admin_pick)
+    if user_admin_pick == "1":
+        edit_or_add(edit_or_add_selection())
+        user_admin_selection()
+    if user_admin_pick == "2":
+        pass
+    else:
+        print("Invalid selection, Try again.")
+        user_admin_pick
+
+
+
+
 if __name__ == '__main__':
+    while user_or_admin(user_admin_selection()) == "1":
+        user_or_admin(user_admin_selection())
     print_language_options(lang_dict)
     chosen_lang = language_input()
     while language_choice_is_valid(lang_dict, chosen_lang) is False:
